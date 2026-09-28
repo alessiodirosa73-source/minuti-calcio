@@ -3,7 +3,9 @@ const CACHE_NAME = "minuti-calcio-v2";
 const FILES_TO_CACHE = [
   "./",
   "./index.html",
-  "./manifest.webmanifest"
+  "./manifest.webmanifest",
+  "./icon-192.png",
+  "./icon-512.png"
 ];
 
 self.addEventListener("install", event => {
