@@ -1,97 +1,28 @@
-<svg xmlns="http://www.w3.org/2000/svg"
-     viewBox="0 0 512 512">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="100" fill="#111827"/>
 
-  <!-- Sfondo -->
-  <rect width="512" height="512" rx="110" fill="#111827"/>
+  <!-- rete -->
+  <path d="M130 150 L382 150 L420 390 L92 390 Z"
+        fill="none" stroke="#9ca3af" stroke-width="10"/>
 
-  <!-- Cerchio del pallone -->
-  <circle
-    cx="256"
-    cy="235"
-    r="135"
-    fill="#ffffff"/>
+  <path d="M155 150 L140 390 M205 150 L200 390 M256 150 L256 390
+           M307 150 L312 390 M357 150 L372 390"
+        fill="none" stroke="#d1d5db" stroke-width="6"/>
 
-  <!-- Pentagono centrale -->
-  <path
-    d="M256 170
-       L296 199
-       L281 246
-       L231 246
-       L216 199 Z"
-    fill="#111827"/>
+  <path d="M112 205 L400 205 M104 260 L408 260 M98 320 L414 320"
+        fill="none" stroke="#d1d5db" stroke-width="6"/>
 
-  <!-- Pannello alto sinistro -->
-  <path
-    d="M216 199
-       L177 181
-       L151 213
-       L169 253
-       L231 246 Z"
-    fill="#111827"/>
+  <!-- porta -->
+  <path d="M105 390 V115 H407 V390"
+        fill="none" stroke="#ffffff" stroke-width="22"
+        stroke-linejoin="round"/>
 
-  <!-- Pannello alto destro -->
-  <path
-    d="M296 199
-       L335 181
-       L361 213
-       L343 253
-       L281 246 Z"
-    fill="#111827"/>
+  <path d="M105 115 H407"
+        stroke="#ffffff" stroke-width="22"
+        stroke-linecap="round"/>
 
-  <!-- Pannello basso sinistro -->
-  <path
-    d="M169 253
-       L177 300
-       L220 327
-       L256 292
-       L231 246 Z"
-    fill="#111827"/>
-
-  <!-- Pannello basso destro -->
-  <path
-    d="M343 253
-       L335 300
-       L292 327
-       L256 292
-       L281 246 Z"
-    fill="#111827"/>
-
-  <!-- Pannello inferiore -->
-  <path
-    d="M220 327
-       L256 350
-       L292 327
-       L256 292 Z"
-    fill="#111827"/>
-
-  <!-- Linee decorative -->
-  <path
-    d="M151 213
-       C130 235 124 270 137 300"
-    fill="none"
-    stroke="#111827"
-    stroke-width="8"
-    stroke-linecap="round"/>
-
-  <path
-    d="M361 213
-       C382 235 388 270 375 300"
-    fill="none"
-    stroke="#111827"
-    stroke-width="8"
-    stroke-linecap="round"/>
-
-  <!-- MC -->
-  <text
-    x="256"
-    y="425"
-    text-anchor="middle"
-    font-family="Arial, Helvetica, sans-serif"
-    font-size="68"
-    font-weight="700"
-    letter-spacing="4"
-    fill="#ffffff">
-    MC
-  </text>
-
+  <!-- prato -->
+  <path d="M55 410 H457"
+        stroke="#22c55e" stroke-width="18"
+        stroke-linecap="round"/>
 </svg>
