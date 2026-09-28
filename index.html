@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#111827" />
+  <link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
   <title>Minuti Calcio</title>
 
   <style>
@@ -1865,6 +1867,18 @@ function init() {
 init();
 
 </script>
-
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./sw.js")
+        .then(() => {
+          console.log("Service Worker attivo");
+        })
+        .catch(error => {
+          console.error("Errore Service Worker:", error);
+        });
+    });
+  }
+</script>
 </body>
 </html>
