@@ -1,0 +1,1870 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#111827" />
+  <title>Minuti Calcio</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #f3f4f6;
+      --card: #ffffff;
+      --text: #111827;
+      --muted: #6b7280;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --danger: #dc2626;
+      --border: #e5e7eb;
+      --green: #16a34a;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      padding-bottom: 80px;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .header {
+      background: #111827;
+      color: white;
+      padding: 18px 16px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .app-title {
+      font-size: 21px;
+      font-weight: 700;
+    }
+
+    .season {
+      font-size: 13px;
+      color: #d1d5db;
+      margin-top: 3px;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: auto;
+      padding: 16px;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 14px;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 8px rgba(0,0,0,.04);
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      font-size: 20px;
+    }
+
+    h3 {
+      margin: 0 0 10px;
+      font-size: 16px;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .input-group {
+      margin-bottom: 12px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      padding: 12px;
+      background: white;
+      color: var(--text);
+      outline: none;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--primary);
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 14px;
+      font-weight: 600;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .btn-danger {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .btn-small {
+      padding: 7px 10px;
+      font-size: 13px;
+    }
+
+    .full {
+      width: 100%;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .stat-box {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 15px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 25px;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .player-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .player-row:last-child {
+      border-bottom: 0;
+    }
+
+    .player-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .shirt {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #eff6ff;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .player-name {
+      font-weight: 600;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .player-actions {
+      display: flex;
+      gap: 5px;
+    }
+
+    .check-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .check-row input {
+      width: auto;
+    }
+
+    .sub-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 70px 40px;
+      gap: 6px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 66px;
+      background: white;
+      border-top: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      z-index: 30;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .nav-btn {
+      border: 0;
+      background: white;
+      color: #6b7280;
+      font-size: 11px;
+      padding: 6px 2px;
+    }
+
+    .nav-btn.active {
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .nav-icon {
+      display: block;
+      font-size: 21px;
+      margin-bottom: 2px;
+    }
+
+    .match-card {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 13px;
+      margin-bottom: 10px;
+      background: white;
+    }
+
+    .match-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .match-opponent {
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .badge {
+      background: #eff6ff;
+      color: var(--primary);
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 30px 10px;
+      color: var(--muted);
+    }
+
+    .notice {
+      padding: 12px;
+      border-radius: 10px;
+      background: #eff6ff;
+      color: #1e40af;
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+
+    .success {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .danger-text {
+      color: var(--danger);
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 10px 7px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+
+    .settings-button {
+      background: transparent;
+      color: white;
+      border: 0;
+      font-size: 22px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (min-width: 600px) {
+      .container {
+        padding: 24px;
+      }
+
+      .bottom-nav {
+        max-width: 700px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-left: 1px solid var(--border);
+        border-right: 1px solid var(--border);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="header">
+    <div class="header-row">
+      <div>
+        <div class="app-title" id="headerTeam">Minuti Calcio</div>
+        <div class="season" id="headerSeason">Stagione 2026/27</div>
+      </div>
+      <button class="settings-button" onclick="showPage('settings')">⚙️</button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- RIEPILOGO -->
+    <section id="page-home" class="page active">
+
+      <div class="card">
+        <h2>Riepilogo stagione</h2>
+        <div class="grid-3">
+          <div class="stat-box">
+            <div class="stat-number" id="homeMatches">0</div>
+            <div class="stat-label">Partite</div>
+          </div>
+
+          <div class="stat-box">
+            <div class="stat-number" id="homePlayers">0</div>
+            <div class="stat-label">Giocatori</div>
+          </div>
+
+          <div class="stat-box">
+            <div class="stat-number" id="homeMinutes">0</div>
+            <div class="stat-label">Minuti squadra</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Ultime partite</h3>
+        <div id="recentMatches"></div>
+      </div>
+
+      <div class="card">
+        <h3>Giocatori con più minuti</h3>
+        <div id="topPlayers"></div>
+      </div>
+
+    </section>
+
+    <!-- ROSA -->
+    <section id="page-squad" class="page">
+
+      <div class="card">
+        <h2>Rosa</h2>
+
+        <div class="input-group">
+          <label>Nome giocatore</label>
+          <input id="playerName" type="text" placeholder="Es. Mario Rossi">
+        </div>
+
+        <div class="input-group">
+          <label>Numero maglia</label>
+          <input id="playerNumber" type="number" min="1" max="99" placeholder="10">
+        </div>
+
+        <button class="btn btn-primary full" onclick="addPlayer()">
+          + Aggiungi giocatore
+        </button>
+      </div>
+
+      <div class="card">
+        <h3>Giocatori</h3>
+        <div id="playersList"></div>
+      </div>
+
+    </section>
+
+    <!-- PARTITA -->
+    <section id="page-match" class="page">
+
+      <div class="card">
+        <h2>Nuova partita</h2>
+
+        <div class="input-group">
+          <label>Avversario</label>
+          <input id="opponent" type="text" placeholder="Es. Milan">
+        </div>
+
+        <div class="grid">
+
+          <div class="input-group">
+            <label>Data</label>
+            <input id="matchDate" type="date">
+          </div>
+
+          <div class="input-group">
+            <label>Durata</label>
+            <select id="matchDuration">
+              <option value="90">90 minuti</option>
+              <option value="120">120 minuti</option>
+            </select>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Titolari</h3>
+
+        <div class="notice">
+          Seleziona esattamente 11 titolari.
+        </div>
+
+        <div id="startersList"></div>
+      </div>
+
+      <div class="card">
+
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+          <h3>Cambi</h3>
+
+          <button class="btn btn-secondary btn-small" onclick="addSubstitution()">
+            + Cambio
+          </button>
+        </div>
+
+        <p class="muted">
+          Inserisci il minuto in cui avviene il cambio.
+        </p>
+
+        <div id="substitutionsList"></div>
+
+      </div>
+
+      <button class="btn btn-primary full" onclick="saveMatch()">
+        💾 Salva partita
+      </button>
+
+    </section>
+
+    <!-- STATISTICHE -->
+    <section id="page-stats" class="page">
+
+      <div class="card">
+        <h2>Statistiche</h2>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Giocatore</th>
+                <th>Presenze</th>
+                <th>Tit.</th>
+                <th>Minuti</th>
+                <th>Media</th>
+              </tr>
+            </thead>
+
+            <tbody id="statsTable"></tbody>
+          </table>
+        </div>
+
+      </div>
+
+      <div class="card">
+        <h3>Partite registrate</h3>
+        <div id="matchesList"></div>
+      </div>
+
+    </section>
+
+    <!-- IMPOSTAZIONI -->
+    <section id="page-settings" class="page">
+
+      <div class="card">
+        <h2>Impostazioni</h2>
+
+        <div class="input-group">
+          <label>Nome squadra</label>
+          <input id="teamName" type="text" placeholder="Es. ASD Milano">
+        </div>
+
+        <div class="input-group">
+          <label>Stagione</label>
+          <input id="seasonName" type="text" placeholder="2026/27">
+        </div>
+
+        <button class="btn btn-primary full" onclick="saveSettings()">
+          Salva impostazioni
+        </button>
+      </div>
+
+      <div class="card">
+        <h3>Backup dati</h3>
+
+        <p class="muted">
+          Puoi salvare una copia di tutti i dati sul telefono.
+        </p>
+
+        <button class="btn btn-secondary full" onclick="exportData()">
+          ⬇️ Esporta backup
+        </button>
+
+        <br><br>
+
+        <input
+          id="importFile"
+          type="file"
+          accept=".json"
+          onchange="importData(event)"
+        >
+      </div>
+
+      <div class="card">
+        <h3>Informazioni</h3>
+
+        <p class="muted">
+          I dati vengono salvati direttamente nel dispositivo.
+        </p>
+
+        <p class="muted">
+          Versione app: 1.0
+        </p>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- NAVIGAZIONE -->
+  <nav class="bottom-nav">
+
+    <button class="nav-btn active" onclick="showPage('home', this)">
+      <span class="nav-icon">🏠</span>
+      Riepilogo
+    </button>
+
+    <button class="nav-btn" onclick="showPage('squad', this)">
+      <span class="nav-icon">👥</span>
+      Rosa
+    </button>
+
+    <button class="nav-btn" onclick="showPage('match', this)">
+      <span class="nav-icon">⚽</span>
+      Partita
+    </button>
+
+    <button class="nav-btn" onclick="showPage('stats', this)">
+      <span class="nav-icon">📊</span>
+      Statistiche
+    </button>
+
+  </nav>
+
+
+<script>
+
+const STORAGE_KEY = "minuti-calcio-v1";
+
+let state = {
+  team: "",
+  season: "2026/27",
+  players: [],
+  matches: []
+};
+
+let substitutions = [];
+
+
+/* =========================
+   DATI
+========================= */
+
+function loadData() {
+
+  const saved = localStorage.getItem(STORAGE_KEY);
+
+  if (saved) {
+
+    try {
+      state = JSON.parse(saved);
+    } catch (error) {
+      console.error("Errore caricamento dati", error);
+    }
+
+  }
+
+  if (!state.players) state.players = [];
+  if (!state.matches) state.matches = [];
+
+}
+
+
+function saveData() {
+
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(state)
+  );
+
+}
+
+
+/* =========================
+   NAVIGAZIONE
+========================= */
+
+function showPage(page, button = null) {
+
+  document.querySelectorAll(".page")
+    .forEach(el => el.classList.remove("active"));
+
+  const selected = document.getElementById("page-" + page);
+
+  if (selected) {
+    selected.classList.add("active");
+  }
+
+  document.querySelectorAll(".nav-btn")
+    .forEach(el => el.classList.remove("active"));
+
+  if (button) {
+    button.classList.add("active");
+  }
+
+  if (page === "home") renderHome();
+  if (page === "squad") renderSquad();
+  if (page === "match") renderMatch();
+  if (page === "stats") renderStats();
+  if (page === "settings") renderSettings();
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+function renderHeader() {
+
+  document.getElementById("headerTeam").textContent =
+    state.team || "Minuti Calcio";
+
+  document.getElementById("headerSeason").textContent =
+    "Stagione " + (state.season || "2026/27");
+
+}
+
+
+/* =========================
+   ROSA
+========================= */
+
+function addPlayer() {
+
+  const nameInput =
+    document.getElementById("playerName");
+
+  const numberInput =
+    document.getElementById("playerNumber");
+
+  const name = nameInput.value.trim();
+
+  const number = numberInput.value
+    ? Number(numberInput.value)
+    : "";
+
+  if (!name) {
+    alert("Inserisci il nome del giocatore.");
+    return;
+  }
+
+  if (number && (number < 1 || number > 99)) {
+    alert("Il numero deve essere compreso tra 1 e 99.");
+    return;
+  }
+
+  state.players.push({
+    id: Date.now().toString(),
+    name: name,
+    number: number
+  });
+
+  saveData();
+
+  nameInput.value = "";
+  numberInput.value = "";
+
+  renderSquad();
+  renderMatch();
+  renderHeader();
+
+}
+
+
+function deletePlayer(id) {
+
+  const player = state.players.find(p => p.id === id);
+
+  if (!player) return;
+
+  const confirmed = confirm(
+    "Vuoi eliminare " + player.name + "?"
+  );
+
+  if (!confirmed) return;
+
+  state.players =
+    state.players.filter(p => p.id !== id);
+
+  saveData();
+
+  renderSquad();
+  renderMatch();
+
+}
+
+
+function renderSquad() {
+
+  const container =
+    document.getElementById("playersList");
+
+  if (state.players.length === 0) {
+
+    container.innerHTML =
+      '<div class="empty">Nessun giocatore inserito.</div>';
+
+    return;
+  }
+
+  container.innerHTML =
+    state.players
+      .map(player => `
+
+        <div class="player-row">
+
+          <div class="player-info">
+
+            <div class="shirt">
+              ${player.number || "•"}
+            </div>
+
+            <div class="player-name">
+              ${escapeHtml(player.name)}
+            </div>
+
+          </div>
+
+          <div class="player-actions">
+
+            <button
+              class="btn btn-danger btn-small"
+              onclick="deletePlayer('${player.id}')"
+            >
+              Elimina
+            </button>
+
+          </div>
+
+        </div>
+
+      `)
+      .join("");
+
+}
+
+
+/* =========================
+   NUOVA PARTITA
+========================= */
+
+function renderMatch() {
+
+  const container =
+    document.getElementById("startersList");
+
+  if (state.players.length === 0) {
+
+    container.innerHTML =
+      '<div class="empty">Prima inserisci i giocatori nella rosa.</div>';
+
+    return;
+  }
+
+  container.innerHTML =
+    state.players
+      .map(player => `
+
+        <label class="check-row">
+
+          <input
+            type="checkbox"
+            value="${player.id}"
+            class="starter-checkbox"
+            onchange="updateStarterCount()"
+          >
+
+          <span>
+            ${player.number ? "#" + player.number + " " : ""}
+            ${escapeHtml(player.name)}
+          </span>
+
+        </label>
+
+      `)
+      .join("");
+
+  renderSubstitutions();
+
+}
+
+
+function updateStarterCount() {
+
+  const checked =
+    document.querySelectorAll(
+      ".starter-checkbox:checked"
+    ).length;
+
+  const notice =
+    document.querySelector("#page-match .notice");
+
+  if (checked === 11) {
+
+    notice.textContent =
+      "✓ Hai selezionato 11 titolari.";
+
+    notice.classList.add("success");
+
+  } else {
+
+    notice.textContent =
+      "Seleziona esattamente 11 titolari.";
+
+    notice.classList.remove("success");
+
+  }
+
+}
+
+
+/* =========================
+   CAMBI
+========================= */
+
+function addSubstitution() {
+
+  substitutions.push({
+    id: Date.now().toString() + Math.random(),
+    out: "",
+    in: "",
+    minute: ""
+  });
+
+  renderSubstitutions();
+
+}
+
+
+function removeSubstitution(id) {
+
+  substitutions =
+    substitutions.filter(s => s.id !== id);
+
+  renderSubstitutions();
+
+}
+
+
+function updateSubstitution(id, field, value) {
+
+  const sub =
+    substitutions.find(s => s.id === id);
+
+  if (!sub) return;
+
+  sub[field] = value;
+
+}
+
+
+function renderSubstitutions() {
+
+  const container =
+    document.getElementById("substitutionsList");
+
+  if (!container) return;
+
+  if (substitutions.length === 0) {
+
+    container.innerHTML =
+      '<div class="muted">Nessun cambio inserito.</div>';
+
+    return;
+  }
+
+  const options =
+    state.players
+      .map(p => `
+        <option value="${p.id}">
+          ${p.number ? "#" + p.number + " " : ""}
+          ${escapeHtml(p.name)}
+        </option>
+      `)
+      .join("");
+
+  container.innerHTML =
+    substitutions
+      .map(sub => `
+
+        <div class="sub-row">
+
+          <select
+            onchange="updateSubstitution('${sub.id}', 'out', this.value)"
+          >
+            <option value="">Esce</option>
+            ${options}
+          </select>
+
+          <select
+            onchange="updateSubstitution('${sub.id}', 'in', this.value)"
+          >
+            <option value="">Entra</option>
+            ${options}
+          </select>
+
+          <input
+            type="number"
+            min="1"
+            max="120"
+            placeholder="Min"
+            value="${sub.minute}"
+            onchange="updateSubstitution('${sub.id}', 'minute', this.value)"
+          >
+
+          <button
+            class="btn btn-danger btn-small"
+            onclick="removeSubstitution('${sub.id}')"
+          >
+            ×
+          </button>
+
+        </div>
+
+      `)
+      .join("");
+
+}
+
+
+/* =========================
+   SALVA PARTITA
+========================= */
+
+function saveMatch() {
+
+  const opponent =
+    document.getElementById("opponent").value.trim();
+
+  const date =
+    document.getElementById("matchDate").value;
+
+  const duration =
+    Number(document.getElementById("matchDuration").value);
+
+  const starterCheckboxes =
+    document.querySelectorAll(
+      ".starter-checkbox:checked"
+    );
+
+  if (!opponent) {
+    alert("Inserisci l'avversario.");
+    return;
+  }
+
+  if (!date) {
+    alert("Inserisci la data.");
+    return;
+  }
+
+  if (starterCheckboxes.length !== 11) {
+    alert(
+      "Devi selezionare esattamente 11 titolari."
+    );
+    return;
+  }
+
+  const starters =
+    Array.from(starterCheckboxes)
+      .map(input => input.value);
+
+  const validSubs = [];
+
+  for (const sub of substitutions) {
+
+    if (!sub.out && !sub.in && !sub.minute) {
+      continue;
+    }
+
+    if (!sub.out || !sub.in || !sub.minute) {
+      alert("Completa tutti i campi dei cambi.");
+      return;
+    }
+
+    const minute = Number(sub.minute);
+
+    if (minute < 1 || minute > duration) {
+      alert(
+        "Il minuto del cambio deve essere compreso tra 1 e " +
+        duration + "."
+      );
+      return;
+    }
+
+    if (sub.out === sub.in) {
+      alert(
+        "Un giocatore non può entrare e uscire nello stesso cambio."
+      );
+      return;
+    }
+
+    validSubs.push({
+      out: sub.out,
+      in: sub.in,
+      minute: minute
+    });
+
+  }
+
+  const match = {
+
+    id: Date.now().toString(),
+
+    opponent: opponent,
+
+    date: date,
+
+    duration: duration,
+
+    starters: starters,
+
+    substitutions: validSubs
+
+  };
+
+  /*
+   * Controlliamo che ogni cambio sia coerente
+   * con i giocatori presenti in campo.
+   */
+
+  const validation =
+    validateSubstitutions(match);
+
+  if (!validation.valid) {
+
+    alert(validation.message);
+
+    return;
+  }
+
+  state.matches.push(match);
+
+  saveData();
+
+  document.getElementById("opponent").value = "";
+
+  document.getElementById("matchDate").value = "";
+
+  substitutions = [];
+
+  alert("Partita salvata!");
+
+  showPage("home");
+
+}
+
+
+/* =========================
+   CONTROLLO CAMBI
+========================= */
+
+function validateSubstitutions(match) {
+
+  const onField =
+    new Set(match.starters);
+
+  const ordered =
+    [...match.substitutions]
+      .sort((a, b) => a.minute - b.minute);
+
+  for (const sub of ordered) {
+
+    if (!onField.has(sub.out)) {
+
+      const player =
+        findPlayer(sub.out);
+
+      return {
+        valid: false,
+        message:
+          (player ? player.name : "Il giocatore") +
+          " non è in campo al minuto " +
+          sub.minute +
+          "."
+      };
+
+    }
+
+    if (onField.has(sub.in)) {
+
+      const player =
+        findPlayer(sub.in);
+
+      return {
+        valid: false,
+        message:
+          (player ? player.name : "Il giocatore") +
+          " è già in campo al minuto " +
+          sub.minute +
+          "."
+      };
+
+    }
+
+    onField.delete(sub.out);
+    onField.add(sub.in);
+
+  }
+
+  return {
+    valid: true
+  };
+
+}
+
+
+/* =========================
+   CALCOLO MINUTI
+========================= */
+
+function calculateMatchMinutes(match) {
+
+  const minutes = {};
+
+  state.players.forEach(player => {
+    minutes[player.id] = 0;
+  });
+
+  const onField = new Set(match.starters);
+
+  const startMinute = {};
+
+  match.starters.forEach(id => {
+    startMinute[id] = 0;
+  });
+
+  const orderedSubs =
+    [...match.substitutions]
+      .sort((a, b) => a.minute - b.minute);
+
+  for (const sub of orderedSubs) {
+
+    const out = sub.out;
+    const incoming = sub.in;
+    const minute = sub.minute;
+
+    if (onField.has(out)) {
+
+      minutes[out] +=
+        minute - startMinute[out];
+
+      onField.delete(out);
+
+    }
+
+    onField.add(incoming);
+
+    startMinute[incoming] = minute;
+
+  }
+
+  onField.forEach(id => {
+
+    minutes[id] +=
+      match.duration - startMinute[id];
+
+  });
+
+  return minutes;
+
+}
+
+
+/* =========================
+   STATISTICHE
+========================= */
+
+function calculateSeasonStats() {
+
+  const stats = {};
+
+  state.players.forEach(player => {
+
+    stats[player.id] = {
+
+      id: player.id,
+
+      name: player.name,
+
+      number: player.number,
+
+      appearances: 0,
+
+      starts: 0,
+
+      minutes: 0
+
+    };
+
+  });
+
+
+  state.matches.forEach(match => {
+
+    const matchMinutes =
+      calculateMatchMinutes(match);
+
+    const played =
+      new Set();
+
+    match.starters.forEach(id => {
+
+      if (stats[id]) {
+
+        stats[id].starts++;
+
+        stats[id].appearances++;
+
+        played.add(id);
+
+      }
+
+    });
+
+
+    match.substitutions.forEach(sub => {
+
+      if (
+        stats[sub.in] &&
+        !played.has(sub.in)
+      ) {
+
+        stats[sub.in].appearances++;
+
+        played.add(sub.in);
+
+      }
+
+    });
+
+
+    Object.entries(matchMinutes)
+      .forEach(([id, mins]) => {
+
+        if (stats[id]) {
+          stats[id].minutes += mins;
+        }
+
+      });
+
+  });
+
+
+  return Object.values(stats);
+
+}
+
+
+/* =========================
+   PAGINA STATISTICHE
+========================= */
+
+function renderStats() {
+
+  const stats =
+    calculateSeasonStats()
+      .sort((a, b) => b.minutes - a.minutes);
+
+  const table =
+    document.getElementById("statsTable");
+
+  if (stats.length === 0) {
+
+    table.innerHTML =
+      `<tr>
+        <td colspan="5">
+          Nessun dato disponibile.
+        </td>
+      </tr>`;
+
+  } else {
+
+    table.innerHTML =
+      stats.map(player => {
+
+        const average =
+          player.appearances > 0
+            ? Math.round(
+                player.minutes /
+                player.appearances
+              )
+            : 0;
+
+        return `
+          <tr>
+
+            <td>
+              ${player.number ? "#" + player.number + " " : ""}
+              ${escapeHtml(player.name)}
+            </td>
+
+            <td>${player.appearances}</td>
+
+            <td>${player.starts}</td>
+
+            <td><strong>${player.minutes}</strong></td>
+
+            <td>${average}</td>
+
+          </tr>
+        `;
+
+      }).join("");
+
+  }
+
+  renderMatchesList();
+
+}
+
+
+/* =========================
+   ELENCO PARTITE
+========================= */
+
+function renderMatchesList() {
+
+  const container =
+    document.getElementById("matchesList");
+
+  if (state.matches.length === 0) {
+
+    container.innerHTML =
+      '<div class="empty">Nessuna partita registrata.</div>';
+
+    return;
+
+  }
+
+  const sorted =
+    [...state.matches]
+      .sort(
+        (a, b) =>
+          new Date(b.date) -
+          new Date(a.date)
+      );
+
+  container.innerHTML =
+    sorted.map(match => `
+
+      <div class="match-card">
+
+        <div class="match-header">
+
+          <div>
+
+            <div class="match-opponent">
+              ${escapeHtml(match.opponent)}
+            </div>
+
+            <div class="muted">
+              ${formatDate(match.date)}
+            </div>
+
+          </div>
+
+          <span class="badge">
+            ${match.duration}'
+          </span>
+
+        </div>
+
+        <br>
+
+        <button
+          class="btn btn-danger btn-small"
+          onclick="deleteMatch('${match.id}')"
+        >
+          Elimina partita
+        </button>
+
+      </div>
+
+    `).join("");
+
+}
+
+
+function deleteMatch(id) {
+
+  const confirmed =
+    confirm("Vuoi eliminare questa partita?");
+
+  if (!confirmed) return;
+
+  state.matches =
+    state.matches.filter(
+      match => match.id !== id
+    );
+
+  saveData();
+
+  renderStats();
+  renderHome();
+
+}
+
+
+/* =========================
+   HOME
+========================= */
+
+function renderHome() {
+
+  const stats =
+    calculateSeasonStats();
+
+  const totalMinutes =
+    stats.reduce(
+      (sum, player) =>
+        sum + player.minutes,
+      0
+    );
+
+  document.getElementById("homeMatches")
+    .textContent = state.matches.length;
+
+  document.getElementById("homePlayers")
+    .textContent = state.players.length;
+
+  document.getElementById("homeMinutes")
+    .textContent = totalMinutes;
+
+
+  const recent =
+    document.getElementById("recentMatches");
+
+  const sortedMatches =
+    [...state.matches]
+      .sort(
+        (a, b) =>
+          new Date(b.date) -
+          new Date(a.date)
+      )
+      .slice(0, 5);
+
+  if (sortedMatches.length === 0) {
+
+    recent.innerHTML =
+      '<div class="empty">Ancora nessuna partita.</div>';
+
+  } else {
+
+    recent.innerHTML =
+      sortedMatches.map(match => `
+
+        <div class="match-card">
+
+          <div class="match-header">
+
+            <div>
+
+              <div class="match-opponent">
+                ${escapeHtml(match.opponent)}
+              </div>
+
+              <div class="muted">
+                ${formatDate(match.date)}
+              </div>
+
+            </div>
+
+            <span class="badge">
+              ${match.duration}'
+            </span>
+
+          </div>
+
+        </div>
+
+      `).join("");
+
+  }
+
+
+  const top =
+    document.getElementById("topPlayers");
+
+  const topStats =
+    [...stats]
+      .sort(
+        (a, b) =>
+          b.minutes - a.minutes
+      )
+      .slice(0, 5);
+
+  if (topStats.length === 0) {
+
+    top.innerHTML =
+      '<div class="empty">Nessun dato.</div>';
+
+  } else {
+
+    top.innerHTML =
+      topStats.map((player, index) => `
+
+        <div class="player-row">
+
+          <div class="player-info">
+
+            <div class="shirt">
+              ${index + 1}
+            </div>
+
+            <div>
+              <div class="player-name">
+                ${escapeHtml(player.name)}
+              </div>
+
+              <div class="muted">
+                ${player.appearances} presenze
+              </div>
+            </div>
+
+          </div>
+
+          <strong>
+            ${player.minutes}'
+          </strong>
+
+        </div>
+
+      `).join("");
+
+  }
+
+}
+
+
+/* =========================
+   IMPOSTAZIONI
+========================= */
+
+function renderSettings() {
+
+  document.getElementById("teamName").value =
+    state.team || "";
+
+  document.getElementById("seasonName").value =
+    state.season || "2026/27";
+
+}
+
+
+function saveSettings() {
+
+  state.team =
+    document.getElementById("teamName")
+      .value.trim();
+
+  state.season =
+    document.getElementById("seasonName")
+      .value.trim() ||
+    "2026/27";
+
+  saveData();
+
+  renderHeader();
+
+  alert("Impostazioni salvate.");
+
+}
+
+
+/* =========================
+   BACKUP
+========================= */
+
+function exportData() {
+
+  const data =
+    JSON.stringify(
+      state,
+      null,
+      2
+    );
+
+  const blob =
+    new Blob(
+      [data],
+      {
+        type: "application/json"
+      }
+    );
+
+  const url =
+    URL.createObjectURL(blob);
+
+  const link =
+    document.createElement("a");
+
+  link.href = url;
+
+  link.download =
+    "minuti-calcio-backup.json";
+
+  link.click();
+
+  URL.revokeObjectURL(url);
+
+}
+
+
+function importData(event) {
+
+  const file =
+    event.target.files[0];
+
+  if (!file) return;
+
+  const reader =
+    new FileReader();
+
+  reader.onload =
+    function(e) {
+
+      try {
+
+        const imported =
+          JSON.parse(e.target.result);
+
+        if (
+          !imported.players ||
+          !imported.matches
+        ) {
+
+          throw new Error(
+            "File non valido"
+          );
+
+        }
+
+        state = imported;
+
+        saveData();
+
+        renderHeader();
+        renderHome();
+        renderSquad();
+        renderMatch();
+
+        alert("Backup importato correttamente.");
+
+      } catch (error) {
+
+        alert(
+          "Errore: il file non è un backup valido."
+        );
+
+      }
+
+    };
+
+  reader.readAsText(file);
+
+}
+
+
+/* =========================
+   UTILITÀ
+========================= */
+
+function findPlayer(id) {
+
+  return state.players.find(
+    player => player.id === id
+  );
+
+}
+
+
+function formatDate(dateString) {
+
+  if (!dateString) return "";
+
+  const date =
+    new Date(
+      dateString + "T00:00:00"
+    );
+
+  return date.toLocaleDateString(
+    "it-IT"
+  );
+
+}
+
+
+function escapeHtml(value) {
+
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
+}
+
+
+/* =========================
+   AVVIO APP
+========================= */
+
+function init() {
+
+  loadData();
+
+  renderHeader();
+
+  renderHome();
+
+  renderSquad();
+
+  renderMatch();
+
+  const today =
+    new Date()
+      .toISOString()
+      .split("T")[0];
+
+  document.getElementById("matchDate")
+    .value = today;
+
+}
+
+
+init();
+
+</script>
+
+</body>
+</html>
